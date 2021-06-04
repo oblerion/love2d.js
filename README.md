@@ -6,7 +6,7 @@ look like love2d but have some differences.
 - [Features](#features)
 - [not work](#not-work)
 ## features
- see [wiki](wiki) for more info
+ see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
 ## not-work
 - full screen mode
 - rotate

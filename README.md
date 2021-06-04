@@ -6,7 +6,7 @@ look like love2d but have some differences.
 - [Features](#features)
 - [not work](#not-work)
 ## features
-
+- print text
 ## not-work
 - full screen mode
 - rotate

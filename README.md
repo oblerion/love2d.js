@@ -7,6 +7,7 @@ look like love2d but have some differences.
 - [not work](#not-work)
 ## features
 - print text
+- setting width and height of game
 ## not-work
 - full screen mode
 - rotate

@@ -6,8 +6,9 @@ look like love2d but have some differences.
 - [Features](#features)
 - [not work](#not-work)
 ## features
-- print text
+- print text with font
 - setting width and height of game
+- draw rectangle
 ## not-work
 - full screen mode
 - rotate

@@ -1,10 +1,13 @@
 # love2d.js
-## Description
-love2d api for html5 game, not complete. 
-look like love2d but have some differences.
 
 ## Table of content
+- [Description](#description)
 - [Features](#features)
+- [example](#example)
+
+## description
+love2d api for html5 game, not complete. 
+look like love2d but have some differences.
 
 ## features
 - print text, rectangle, cercle , line
@@ -53,5 +56,5 @@ look like love2d but have some differences.
 </html>
 ```
  
-## How to Contribute
+## how_to_Contribute
 The [Contributor Covenant](https://www.contributor-covenant.org/) is an industry standard.

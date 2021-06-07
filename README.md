@@ -7,7 +7,7 @@ look like love2d but have some differences.
 - [Features](#features)
 
 ## features
-- print text, rectange, cercle , line
+- print text, rectangle, cercle , line
 - load image, song ,video and use it
 - keyboard and mouse (touch basic) input
 - setting window and icon 

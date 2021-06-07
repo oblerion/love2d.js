@@ -299,7 +299,7 @@ math={
 		return x*Math.PI/180;
 	}
 	
-}
+};
 curant_color="black";
 curant_volume=1;
 love = {
@@ -562,5 +562,5 @@ love = {
 			return false;
 		}
 	}
-}
+};
 game.game();

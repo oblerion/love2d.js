@@ -7,7 +7,11 @@ look like love2d but have some differences.
 - [Features](#features)
 
 ## features
- see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
+- print text, rectange, cercle , line
+- load image, song ,video and use it
+- keyboard and mouse (touch basic) input
+- setting window and icon 
+ <br>see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
  
 ## example
 ```html

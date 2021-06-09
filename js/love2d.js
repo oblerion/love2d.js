@@ -1,5 +1,5 @@
 /*
-love2d.js version b1
+love2d.js version b1.1
 MIT License
 Copyright (c) 2021 oblerion
 
@@ -23,12 +23,10 @@ SOFTWARE.
 */
 let mouse = {"x":0,"y":0,"w":6,"h":6,"btnG":0,"btnD":0,"btnM":0};
 let keyboard = {"key":["nil"]};
-let ASSET=[];
 let canvas = document.createElement("canvas");
 let context;
 const pmouse = true;
 const pkeyboard = true;
-const pexport = false;
 let game;
 
 
@@ -65,6 +63,7 @@ class Game{
         context.fillStyle = "#f0f0e2";
         context.fillRect(0,0,canvas.width,canvas.height);
         context.fillStyle = "#FFFFFF";  
+        const dt = 1/60;
 		this.interval = setInterval(function e()
 		{
             if(document.readyState=="complete")
@@ -78,7 +77,7 @@ class Game{
                 context.fillRect(0,0,canvas.width,canvas.height);
                 context.fillStyle = "#FFFFFF";  
                 context.save(); 
-                love.update();
+                love.update(dt);
                 love.draw();
                 context.restore();
             }
@@ -300,8 +299,12 @@ math={
 	}
 	
 };
-curant_color="black";
-curant_volume=1;
+function print(a,b,c)
+{
+	console.log(a,b,c);
+}
+curant_color="#000000";
+curant_volume=1.0;
 love = {
 	load:undefined,
 	update:undefined,
@@ -331,8 +334,9 @@ love = {
 			let sg;
 			if(type=="static")
 			{
-				sg = document.createElement("audio");
+				sg = new Audio();
 				sg.src = filename;
+				sg.setAttribute("volume", 1.0);
 				sg.setAttribute("preload", "auto");
 				sg.setAttribute("controls", "none");
 				sg.style.display = "none";
@@ -340,8 +344,9 @@ love = {
 			}
 			else if(type=="stream")
 			{
-				sg = document.createElement("audio");
+				sg = new Audio();
 				sg.src = filename;
+				sg.setAttribute("volume", 1.0);
 				sg.setAttribute("preload", "auto");
 				sg.setAttribute("controls", "none");
 				sg.style.display = "none";
@@ -356,13 +361,12 @@ love = {
 		},
 		setVolume:function(vol)
 		{
-			if(vol>0 && vol<1.1) curant_volume=vol;
+			if(vol>=0.0 && vol<1.1) curant_volume=vol;
 		},
 		play:function(clas)
 		{
-			clas.volume=curant_volume;
-			clas.pause();
-			if(clas.currentTime > 0) clas.currentTime =0;
+			clas.volume = curant_volume;
+			if(clas.loop==false && clas.currentTime > 0) clas.currentTime =0;
 			clas.play();
 		},
 		pause:function(clas)
@@ -400,36 +404,89 @@ love = {
 			vid.type="video";
 			return vid;
 		},
-		draw:function(clas,x,y,r,sx,sy)
+		newQuad:function(x,y,w,h,sw,sh)
+		{
+			let q = {
+				x:x,
+				y:y,
+				w:w,
+				h:h
+			};
+			return q;
+		},
+		draw:function(clas,x,y,r,sx,sy,o)
 		{
 			if(clas.type=="image" ||
-			   (clas.type=="video" && clas.ended==false))
+			(clas.type=="video" && clas.ended==false))
 			{
-				if(sx!=null && sy!=null)
+				if(typeof(x)=="number")
 				{
-					if(r>0)
+			
+					if(sx!=null && sy!=null)
 					{
-						context.translate(x+(sx/2),y+(sy/2));
-						context.rotate(r);
-						context.translate(-x-(sx/2),-y-(sy/2));
-						context.drawImage(clas,x,y,sx,sy);
-						context.setTransform(1,0,0,1,0,0);
+						if(r>0)
+						{
+							context.translate(x+(sx/2),y+(sy/2));
+							context.rotate(r);
+							context.translate(-x-(sx/2),-y-(sy/2));
+							context.drawImage(clas,x,y,sx,sy);
+							context.setTransform(1,0,0,1,0,0);
+						}
+						else context.drawImage(clas,x,y,sx,sy);
 					}
-					else context.drawImage(clas,x,y,sx,sy);
+					else
+					{
+						if(r>0)
+						{
+							context.translate(x+(clas.width/2),y+(clas.height/2));
+							context.rotate(r);
+							context.translate(-x-(clas.width/2),-y-(clas.height/2));
+							context.drawImage(clas,x,y);
+							context.setTransform(1,0,0,1,0,0);
+						}
+						else context.drawImage(clas,x,y);
+					}
 				}
-				else
+				else if(typeof(x)=="object")
 				{
-					if(r>0)
+					/* x -> quad
+					 * y -> x
+					 * r -> y
+					 * sx ->r
+					 * sy ->sx
+					 * o ->sy
+					*/
+					if(sy!=null && o!=null)
 					{
-						context.translate(x+(clas.width/2),y+(clas.height/2));
-						context.rotate(r);
-						context.translate(-x-(clas.width/2),-y-(clas.height/2));
-						context.drawImage(clas,x,y);
-						context.setTransform(1,0,0,1,0,0);
+						if(sx>0)
+						{
+							context.translate(y+(x.w/2),r+(x.h/2));
+							context.rotate(sx);
+							context.translate(-y-(x.w/2),-r-(x.h/2));
+							context.drawImage(clas,x.x,x.y,x.w,x.h,y,r,sy,o);
+							context.setTransform(1,0,0,1,0,0);
+						}
+						else
+							context.drawImage(clas,x.x,x.y,x.w,x.h,y,r,sy,o);
+
 					}
-					else context.drawImage(clas,x,y);
+					else
+					{
+						if(sx>0)
+						{
+							context.translate(y+(x.w/2),r+(x.h/2));
+							context.rotate(sx);
+							context.translate(-y-(x.w/2),-r-(x.h/2));
+							context.drawImage(clas,x.x,x.y,x.w,x.h,y,r,x.w,x.h);
+							context.setTransform(1,0,0,1,0,0);
+						}
+						else
+							context.drawImage(clas,x.x,x.y,x.w,x.h,y,r,x.w,x.h);
+					}
 				}
 			}
+			if(curant_color.length>7) context.globalAlpha = 1;
+		
 					
 		},
 		getColor:function()
@@ -440,7 +497,13 @@ love = {
 		{
 			let hex;
 			hex = "#" + (r | 1 << 8).toString(16).slice(1) +(g | 1 << 8).toString(16).slice(1) +(b | 1 << 8).toString(16).slice(1);
-			if (a != null) hex = hex + (a | 1 << 8).toString(16).slice(1);
+			if (a != null) 
+			{	
+				hex = hex + (a | 1 << 8).toString(16).slice(1);
+				let ca = Math.floor((a/255)*10)/10;
+				if(ca != context.globalAlpha) context.globalAlpha = ca; 
+			}
+			else if(!context.globalAlpha) context.globalAlpha = 1;
 			curant_color=hex;
 		},
 		setFont:function(pfont)
@@ -517,7 +580,7 @@ love = {
 				return K_key("ArrowLeft");
 			}
 			else if(key=="right"){
-				return K_key("ArrowLeft");
+				return K_key("ArrowRight");
 			}
 			return K_key(key);
 		}

@@ -1,5 +1,5 @@
 /*
-love2d.js version b1.1
+love2d.js version b1.2
 MIT License
 Copyright (c) 2021 oblerion
 
@@ -27,207 +27,188 @@ let canvas = document.createElement("canvas");
 let context;
 const pmouse = true;
 const pkeyboard = true;
-let game;
-
-
-function newGame(w,h,pcontext)
+canvas.width = 800;
+canvas.height = 480;
+canvas.id = "canvas";
+context = canvas.getContext("2d");
+let interval = null;
+document.body.insertBefore(canvas, document.body.childNodes[0]);
+document.body.overflow = "hidden";
+document.body.position = "fixed";
+const freq = 60;
+let loading=0;
+function game()
 {
-    game = new Game(w,h,pcontext);
-    game.game();
+	load();  
+	if(love.load!=undefined) love.load();
+	context.fillStyle = "#f0f0e2";
+	context.fillRect(0,0,canvas.width,canvas.height);
+	context.fillStyle = "#FFFFFF";  
+	const dt = 1/60;
+	interval = setInterval(function e()
+	{
+		if(document.readyState=="complete")
+		{
+			if(loading==0 && love.load!=undefined)
+			{
+				loading=1;
+				love.load();
+			} 
+			context.fillStyle = "#f0f0e2";
+			context.fillRect(0,0,canvas.width,canvas.height);
+			context.fillStyle = "#FFFFFF";  
+			context.save(); 
+			love.update(dt);
+			love.draw();
+			context.restore();
+		}
+		else
+		{
+			context.fillStyle= curant_color;
+			context.font = "50px arial";
+			context.fillText("--------------",160,70);
+			context.fillText("  loading ... ",160,120);
+			context.fillText("--------------",160,170);
+		}
+		
+	},100/freq);
+}
+function load()
+{	
+	if(pkeyboard == true)
+	{
+		document.addEventListener('keydown',
+		function(e){   
+			if(keyboard.key[0]!="nil")
+			{
+				for(let i=0;i<keyboard.key.lenght;i++)
+				{
+					if(e.key == keyboard.key[i]) 
+					{
+						return;
+					}
+				}
+			}
+			else keyboard.key= [];
+			keyboard.key.push(e.key);
+			if(love.keypressed!=undefined) 
+				love.keypressed(e.key,e.keyCode,e.repeat);
+		});
+		document.addEventListener('keyup',
+		function(e){
+			keyboard.key= ["nil"];
+			if(love.keyreleased!=undefined)
+				love.keyreleased(e.key,e.keyCode);
+
+		});
+	}
+	if(pmouse == true)
+	{
+		canvas.addEventListener('mousedown', function(e){
+			switch(e.buttons)
+			{
+				case 1: mouse.btnG = 1;
+				break;
+				case 2: mouse.btnD = 1;
+				break;
+				case 4: mouse.btnM = 1;
+				break;
+				default:;
+			}
+			if(love.mousepressed!=undefined)
+			{
+				if(mouse.btnG==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,1,false);
+				}
+				else if(mouse.btnD==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,2,false);
+				}
+				else if(mouse.btnM==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,3,false);
+				}
+			}
+		});
+		canvas.addEventListener('mousemove', 
+		function(e)
+		{
+			mouse.y =e.y-canvas.offsetTop;
+			mouse.x =e.x-canvas.offsetLeft;
+		});
+		canvas.addEventListener('mouseup', 
+		function(e){
+ 
+			if(love.mousereleased!=undefined)
+			{
+				if(mouse.btnG==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,1,false);
+				}
+				else if(mouse.btnD==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,2,false);
+				}
+				else if(mouse.btnM==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,3,false);
+				}
+			}
+			mouse.btnG = 0;
+			mouse.btnD = 0;
+			mouse.btnM = 0;
+		});
+		canvas.addEventListener("touchstart",
+		function(e){
+			console.log("touch");
+			e.preventDefault();
+			let touches = e.touches;
+			mouse.x = touches[0].clientX;
+			mouse.y = touches[0].clientY;
+			mouse.btnG = 1;
+			if(love.mousepressed!=undefined)
+			{
+				love.mousepressed(mouse.x,mouse.y,1,true); 
+			}
+		},false);
+		canvas.addEventListener("touchmove",
+		function(e){
+			console.log("touch move");
+			e.preventDefault();
+			let touches = e.touches;
+			mouse.x = touches[0].clientX;
+			mouse.y = touches[0].clientY;
+			mouse.btnG = 1;
+		},false);
+		canvas.addEventListener("touchend",
+		function(e){
+			e.preventDefault();
+			console.log("touch end");
+			mouse.x = 0;//e.targetTouches[0].x;
+			mouse.y = 0;//e.targetTouches[0].y;
+			mouse.btnG = 0;
+			if(love.mousereleased!=undefined)
+			{
+				love.mousereleased(mouse.x,mouse.y,1,true); 
+			}
+		},false);
+	}
 }
 function disableLeftClick()
 {
-    game.disableLeftClick();
+	// disable click gauche
+	document.addEventListener("contextmenu", function(e) {
+		e.preventDefault()
+	});
+	document.addEventListener("keydown", function(e) {
+		function t(e) {
+			return e.stopPropagation ? e.stopPropagation() : window.event && (window.event.cancelBubble = !0), e.preventDefault(), !1
+		};
+		e.ctrlKey && e.shiftKey && 73 == e.keyCode && t(e), e.ctrlKey && e.shiftKey && 74 == e.keyCode && t(e), 83 == e.keyCode && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && t(e), e.ctrlKey && 85 == e.keyCode && t(e), 123 == event.keyCode && t(e)
+	});
 }
-let loading=0;
-class Game{
-	constructor(w,h,pcontext,pfreq)
-	{
-		canvas.width = w;
-		canvas.height = h;
-        canvas.id = "canvas";
-		this.context = canvas.getContext(pcontext);
-		this.interval = null;
-		context = this.context;
-		document.body.insertBefore(canvas, document.body.childNodes[0]);
-		document.body.overflow = "hidden";
-		document.body.position = "fixed";
-		if(pfreq==null)this.freq = 60;
-		else this.freq=pfreq;
-	}
 
-	game()
-	{
-        this.load();  
-        if(love.load!=undefined) love.load();
-        context.fillStyle = "#f0f0e2";
-        context.fillRect(0,0,canvas.width,canvas.height);
-        context.fillStyle = "#FFFFFF";  
-        const dt = 1/60;
-		this.interval = setInterval(function e()
-		{
-            if(document.readyState=="complete")
-            {
-				if(loading==0 && love.load!=undefined)
-				{
-					loading=1;
-					love.load();
-				} 
-                context.fillStyle = "#f0f0e2";
-                context.fillRect(0,0,canvas.width,canvas.height);
-                context.fillStyle = "#FFFFFF";  
-                context.save(); 
-                love.update(dt);
-                love.draw();
-                context.restore();
-            }
-            else
-            {
-				context.fillStyle= curant_color;
-				context.font = "50px arial";
-				context.fillText("--------------",160,70);
-				context.fillText("  loading ... ",160,120);
-                context.fillText("--------------",160,170);
-            }
-            
-		},100/this.freq);
-	}
-	load()
-	{	
-        if(pkeyboard == true)
-        {
-            document.addEventListener('keydown',
-            function(e){   
-				if(keyboard.key[0]!="nil")
-                {
-					for(let i=0;i<keyboard.key.lenght;i++)
-					{
-						if(e.key == keyboard.key[i]) 
-						{
-							return;
-						}
-					}
-				}
-				else keyboard.key= [];
-				keyboard.key.push(e.key);
-				if(love.keypressed!=undefined) 
-					love.keypressed(e.key,e.keyCode,e.repeat);
-            });
-            document.addEventListener('keyup',
-            function(e){
-                keyboard.key= ["nil"];
-                if(love.keyreleased!=undefined)
-					love.keyreleased(e.key,e.keyCode);
- 
-            });
-        }
-        if(pmouse == true)
-        {
-            canvas.addEventListener('mousedown', function(e){
-                switch(e.buttons)
-                {
-                    case 1: mouse.btnG = 1;
-                    break;
-                    case 2: mouse.btnD = 1;
-                    break;
-                    case 4: mouse.btnM = 1;
-                    break;
-                    default:;
-                }
-                if(love.mousepressed!=undefined)
-                {
-					if(mouse.btnG==1)
-					{
-						love.mousepressed(mouse.x,mouse.y,1,false);
-					}
-					else if(mouse.btnD==1)
-					{
-						love.mousepressed(mouse.x,mouse.y,2,false);
-					}
-					else if(mouse.btnM==1)
-					{
-						love.mousepressed(mouse.x,mouse.y,3,false);
-					}
-				}
-            });
-            canvas.addEventListener('mousemove', 
-            function(e)
-            {
-                mouse.y =e.y-canvas.offsetTop;
-                mouse.x =e.x-canvas.offsetLeft;
-            });
-            canvas.addEventListener('mouseup', 
-            function(e){
-     
-                if(love.mousereleased!=undefined)
-                {
-					if(mouse.btnG==1)
-					{
-						love.mousereleased(mouse.x,mouse.y,1,false);
-					}
-					else if(mouse.btnD==1)
-					{
-						love.mousereleased(mouse.x,mouse.y,2,false);
-					}
-					else if(mouse.btnM==1)
-					{
-						love.mousereleased(mouse.x,mouse.y,3,false);
-					}
-				}
-				mouse.btnG = 0;
-                mouse.btnD = 0;
-                mouse.btnM = 0;
-            });
-            canvas.addEventListener("touchstart",
-            function(e){
-                console.log("touch");
-                e.preventDefault();
-                let touches = e.touches;
-                mouse.x = touches[0].clientX;
-                mouse.y = touches[0].clientY;
-                mouse.btnG = 1;
-                if(love.mousepressed!=undefined)
-                {
-					love.mousepressed(mouse.x,mouse.y,1,true); 
-				}
-            },false);
-            canvas.addEventListener("touchmove",
-            function(e){
-                console.log("touch move");
-                e.preventDefault();
-                let touches = e.touches;
-                mouse.x = touches[0].clientX;
-                mouse.y = touches[0].clientY;
-                mouse.btnG = 1;
-            },false);
-            canvas.addEventListener("touchend",
-            function(e){
-                e.preventDefault();
-                console.log("touch end");
-                mouse.x = 0;//e.targetTouches[0].x;
-                mouse.y = 0;//e.targetTouches[0].y;
-                mouse.btnG = 0;
-                if(love.mousereleased!=undefined)
-                {
-					love.mousereleased(mouse.x,mouse.y,1,true); 
-				}
-            },false);
-        }
-	}
-    disableLeftClick()
-    {
-        // disable click gauche
-        document.addEventListener("contextmenu", function(e) {
-            e.preventDefault()
-        });
-        document.addEventListener("keydown", function(e) {
-            function t(e) {
-                return e.stopPropagation ? e.stopPropagation() : window.event && (window.event.cancelBubble = !0), e.preventDefault(), !1
-            };
-            e.ctrlKey && e.shiftKey && 73 == e.keyCode && t(e), e.ctrlKey && e.shiftKey && 74 == e.keyCode && t(e), 83 == e.keyCode && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && t(e), e.ctrlKey && 85 == e.keyCode && t(e), 123 == event.keyCode && t(e)
-        });
-    }
-}
 
 function K_key(k)
 {
@@ -285,7 +266,6 @@ function LoadSave(name)
 }
 
 let font = "arial";
-game = new Game(800,480,"2d");
 disableLeftClick();
 math={
 	random:function(min,max)
@@ -515,11 +495,9 @@ love = {
 		{
 			if(r==0)
 			{
-				//context.rotate(0-(r*Math.PI /180));
 				context.fillStyle= curant_color;
 				context.font = size + "px " + font;
 				context.fillText(text,x,y);
-				//context.rotate(0);
 			}
 			else
 			{
@@ -626,4 +604,4 @@ love = {
 		}
 	}
 };
-game.game();
+game();

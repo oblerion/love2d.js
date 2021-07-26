@@ -23,13 +23,16 @@
 			q = love.graphics.newQuad(0,0,16,16);
 			// set icone
 			love.window.setIcon(pic);
+			// loading loop song
 			song = love.audio.newSource("test.wav","stream");
 			love.audio.setVolume(0.2);
-			//console.log(love.audio.getVolume());
-			//song.volume=0.1;
-			
+			//video loading
+			vid = love.graphics.newVideo("test.webm");
+			// start video
+			vid.play();
 		}
 		// update loop function
+		
 		love.update=function(dt)
 		{
 			if(love.keyboard.isDown("left")) 
@@ -49,7 +52,7 @@
 		{
 			let Mx = love.mouse.getX();	
 			let My = love.mouse.getY();
-			//Text("hello",12,34,"blue",25);
+			love.graphics.print("left for start music  right for stop",12,34,"blue",25);
 			love.graphics.setColor(200,2,2,125);
 			love.graphics.print("hello ",200,250,0,25);
 			love.graphics.setColor(0,200,0,125);
@@ -57,6 +60,7 @@
 			 love.graphics.setColor(200,2,2);
 			 love.graphics.line(Mx,0,300,34);
 			  love.graphics.draw(pic,150,50,0,64,64);
+			  love.graphics.draw(vid,23,23);
 		
 		}
 		

@@ -6,7 +6,7 @@
 - [example](#example)
 
 ## description
-[love2d](https://love2d.org) framework for javascript game.
+[love2d](https://love2d.org) api for html5 game, not using emscripten, made with equivalent of lua functions written in javascript
 
 ## features
 - print text, rectangle, cercle , line

@@ -281,7 +281,12 @@ math={
 };
 function print(a,b,c)
 {
-	console.log(a,b,c);
+	if(b==null && c==null)
+		console.log(a)
+	else if(c==null && b!=null)
+		console.log(a,b);
+	else 
+		console.log(a,b,c);
 }
 curant_color="#000000";
 curant_volume=1.0;

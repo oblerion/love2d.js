@@ -6,7 +6,7 @@
 - [example](#example)
 
 ## description
-love2d api for html5 game, not complete. 
+[love2d](https://love2d.org) api for html5 game, not complete. 
 look like love2d but have some differences.
 
 ## features

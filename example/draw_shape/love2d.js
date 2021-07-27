@@ -1,5 +1,5 @@
 /*
-love2d.js version b1.2
+love2d.js version b0.2
 MIT License
 Copyright (c) 2021 oblerion
 

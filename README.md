@@ -83,8 +83,3 @@
 	</script>
 </body>
 </html>
-
-```
- 
-## how_to_Contribute
-The [Contributor Covenant](https://www.contributor-covenant.org/) is an industry standard.

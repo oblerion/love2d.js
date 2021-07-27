@@ -6,8 +6,7 @@
 - [example](#example)
 
 ## description
-[love2d](https://love2d.org) api for html5 game, not complete. 
-look like love2d but have some differences.
+[love2d](https://love2d.org) framework for javascript game.
 
 ## features
 - print text, rectangle, cercle , line

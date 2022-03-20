@@ -1,7 +1,7 @@
 /*
-love2d.js version b0.2
+love2d.js version b0.3
 MIT License
-Copyright (c) 2021 oblerion
+Copyright (c) 2022 oblerion
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,257 +37,7 @@ document.body.overflow = "hidden";
 document.body.position = "fixed";
 const freq = 60;
 let loading=0;
-function game()
-{
-	load();  
-	if(love.load!=undefined) love.load();
-	context.fillStyle = "#f0f0e2";
-	context.fillRect(0,0,canvas.width,canvas.height);
-	context.fillStyle = "#FFFFFF";  
-	const dt = 1/60;
-	interval = setInterval(function e()
-	{
-		if(document.readyState=="complete")
-		{
-			if(loading==0 && love.load!=undefined)
-			{
-				loading=1;
-				love.load();
-			} 
-			context.fillStyle = "#f0f0e2";
-			context.fillRect(0,0,canvas.width,canvas.height);
-			context.fillStyle = "#FFFFFF";  
-			context.save(); 
-			love.update(dt);
-			love.draw();
-			context.restore();
-		}
-		else
-		{
-			context.fillStyle= curant_color;
-			context.font = "50px arial";
-			context.fillText("--------------",160,70);
-			context.fillText("  loading ... ",160,120);
-			context.fillText("--------------",160,170);
-		}
-		
-	},100/freq);
-}
-function load()
-{	
-	if(pkeyboard == true)
-	{
-		document.addEventListener('keydown',
-		function(e){   
-			if(keyboard.key[0]!="nil")
-			{
-				for(let i=0;i<keyboard.key.lenght;i++)
-				{
-					if(e.key == keyboard.key[i]) 
-					{
-						return;
-					}
-				}
-			}
-			else keyboard.key= [];
-			keyboard.key.push(e.key);
-			if(love.keypressed!=undefined) 
-				love.keypressed(e.key,e.keyCode,e.repeat);
-		});
-		document.addEventListener('keyup',
-		function(e){
-			keyboard.key= ["nil"];
-			if(love.keyreleased!=undefined)
-				love.keyreleased(e.key,e.keyCode);
-
-		});
-	}
-	if(pmouse == true)
-	{
-		canvas.addEventListener('mousedown', function(e){
-			switch(e.buttons)
-			{
-				case 1: mouse.btnG = 1;
-				break;
-				case 2: mouse.btnD = 1;
-				break;
-				case 4: mouse.btnM = 1;
-				break;
-				default:;
-			}
-			if(love.mousepressed!=undefined)
-			{
-				if(mouse.btnG==1)
-				{
-					love.mousepressed(mouse.x,mouse.y,1,false);
-				}
-				else if(mouse.btnD==1)
-				{
-					love.mousepressed(mouse.x,mouse.y,2,false);
-				}
-				else if(mouse.btnM==1)
-				{
-					love.mousepressed(mouse.x,mouse.y,3,false);
-				}
-			}
-		});
-		canvas.addEventListener('mousemove', 
-		function(e)
-		{
-			mouse.y =e.y-canvas.offsetTop;
-			mouse.x =e.x-canvas.offsetLeft;
-		});
-		canvas.addEventListener('mouseup', 
-		function(e){
- 
-			if(love.mousereleased!=undefined)
-			{
-				if(mouse.btnG==1)
-				{
-					love.mousereleased(mouse.x,mouse.y,1,false);
-				}
-				else if(mouse.btnD==1)
-				{
-					love.mousereleased(mouse.x,mouse.y,2,false);
-				}
-				else if(mouse.btnM==1)
-				{
-					love.mousereleased(mouse.x,mouse.y,3,false);
-				}
-			}
-			mouse.btnG = 0;
-			mouse.btnD = 0;
-			mouse.btnM = 0;
-		});
-		canvas.addEventListener("touchstart",
-		function(e){
-			console.log("touch");
-			e.preventDefault();
-			let touches = e.touches;
-			mouse.x = touches[0].clientX;
-			mouse.y = touches[0].clientY;
-			mouse.btnG = 1;
-			if(love.mousepressed!=undefined)
-			{
-				love.mousepressed(mouse.x,mouse.y,1,true); 
-			}
-		},false);
-		canvas.addEventListener("touchmove",
-		function(e){
-			console.log("touch move");
-			e.preventDefault();
-			let touches = e.touches;
-			mouse.x = touches[0].clientX;
-			mouse.y = touches[0].clientY;
-			mouse.btnG = 1;
-		},false);
-		canvas.addEventListener("touchend",
-		function(e){
-			e.preventDefault();
-			console.log("touch end");
-			mouse.x = 0;//e.targetTouches[0].x;
-			mouse.y = 0;//e.targetTouches[0].y;
-			mouse.btnG = 0;
-			if(love.mousereleased!=undefined)
-			{
-				love.mousereleased(mouse.x,mouse.y,1,true); 
-			}
-		},false);
-	}
-}
-function disableLeftClick()
-{
-	// disable click gauche
-	document.addEventListener("contextmenu", function(e) {
-		e.preventDefault()
-	});
-	document.addEventListener("keydown", function(e) {
-		function t(e) {
-			return e.stopPropagation ? e.stopPropagation() : window.event && (window.event.cancelBubble = !0), e.preventDefault(), !1
-		};
-		e.ctrlKey && e.shiftKey && 73 == e.keyCode && t(e), e.ctrlKey && e.shiftKey && 74 == e.keyCode && t(e), 83 == e.keyCode && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && t(e), e.ctrlKey && 85 == e.keyCode && t(e), 123 == event.keyCode && t(e)
-	});
-}
-
-
-function K_key(k)
-{
-    if(keyboard.key[0] != "nil")
-    {
-		if(k == null) return keyboard.key[0];
-		for(let i=0;i<2;i++)
-		{
-			if(keyboard.key[i] == k) return true;
-		}
-	}
-	else return false;
-}
-const sleep = async(milliseconds) =>{
-	return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-const Delay = async(ms)=>{
-	await sleep(ms);
-}
-
-
-function Timer()
-{
-	let t={
-		"t":0,
-		"test":function()
-		{
-			if(t.t>0) 
-			{
-	
-				t.t = t.t -1; 
-			}
-			if(t.t==0)
-			{
-				return true;
-			}
-			return false;
-		},
-		"start":function(n)
-		{
-			t.t = n;
-		}
-	};
-	return t;
-}
-
-function WriteSave(name,data)
-{
-	//limite to 5Mb;
-	localStorage.setItem(name, JSON.stringify(data));
-}
-function LoadSave(name)
-{
-	return JSON.parse(localStorage.getItem(name));
-}
-
-let font = "arial";
-disableLeftClick();
-math={
-	random:function(min,max)
-	{
-		if(max == null) return Math.floor(Math.random()*Math.floor(min));
-		else return Math.floor(min + Math.random()*Math.floor(max));
-	},
-	rad:function(x)
-	{
-		return x*Math.PI/180;
-	}
-	
-};
-function print(a,b,c)
-{
-	if(b==null && c==null)
-		console.log(a)
-	else if(c==null && b!=null)
-		console.log(a,b);
-	else 
-		console.log(a,b,c);
-}
+let n_exit=false;
 curant_color="#000000";
 curant_volume=1.0;
 love = {
@@ -303,6 +53,10 @@ love = {
 		{
 			canvas.width = width;
 			canvas.height = height;
+		},
+		getMode:function()
+		{
+			return canvas.width,canvas.height;
 		},
 		setIcon(object)
 		{
@@ -364,6 +118,13 @@ love = {
 		}
 	},
 	graphics:{
+		//newFont:function(filename,url)
+		//{
+			//let f = new FontFace(filename,url);
+			//return f;
+			////f.load();
+			////document.fonts.add(f);
+		//},
 		newImage:function(filename)
 		{
 			let img; 
@@ -607,6 +368,288 @@ love = {
 			if(res>0) return true;
 			return false;
 		}
+	},
+	event:{
+		quit:function()
+		{
+			n_exit=true;
+		}
+
 	}
 };
+function game()
+{
+	load();  
+	if(love.load!=undefined) love.load();
+	context.fillStyle = "#f0f0e2";
+	context.fillRect(0,0,canvas.width,canvas.height);
+	context.fillStyle = "#FFFFFF";  
+	const dt = 1/60;
+	interval = 0;
+	function e(){
+		if(n_exit!=true) 
+		{
+			if(document.readyState=="complete")
+			{
+				if(loading==0 && love.load!=undefined)
+				{
+					loading=1;
+					love.load();
+				} 
+				context.fillStyle = "#f0f0e2";
+				context.fillRect(0,0,canvas.width,canvas.height);
+				context.fillStyle = "#FFFFFF";  
+				context.save(); 
+				if(love.update!=undefined)love.update(dt);
+				if(love.draw!=undefined)love.draw();
+				context.restore();
+			}
+			else
+			{
+				context.fillStyle= curant_color;
+				context.font = "50px arial";
+				context.fillText("--------------",160,70);
+				context.fillText("  loading ... ",160,120);
+				context.fillText("--------------",160,170);
+			}
+			Delay(dt*1000);
+			window.requestAnimationFrame(e); 
+		}
+		else
+		{
+			context.fillStyle = "#000000";
+			context.fillRect(0,0,canvas.width,canvas.height);
+			context.fillStyle = "#FFFFFF";  
+			context.font = "50px arial";
+			context.fillText("game is stopped",160,120);
+		}
+	};
+	e();
+
+}
+function load()
+{	
+	if(pkeyboard == true)
+	{
+		document.addEventListener('keydown',
+		function(e){   
+			if(keyboard.key[0]!="nil")
+			{
+				for(let i=0;i<keyboard.key.lenght;i++)
+				{
+					if(e.key == keyboard.key[i]) 
+					{
+						return;
+					}
+				}
+			}
+			else keyboard.key= [];
+			keyboard.key.push(e.key);
+			if(love.keypressed!=undefined) 
+				love.keypressed(e.key,e.keyCode,e.repeat);
+		});
+		document.addEventListener('keyup',
+		function(e){
+			keyboard.key= ["nil"];
+			if(love.keyreleased!=undefined)
+				love.keyreleased(e.key,e.keyCode);
+
+		});
+	}
+	if(pmouse == true)
+	{
+		canvas.addEventListener('mousedown', function(e){
+			switch(e.buttons)
+			{
+				case 1: mouse.btnG = 1;
+				break;
+				case 2: mouse.btnD = 1;
+				break;
+				case 4: mouse.btnM = 1;
+				break;
+				default:;
+			}
+			if(love.mousepressed!=undefined)
+			{
+				if(mouse.btnG==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,1,false);
+				}
+				else if(mouse.btnD==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,2,false);
+				}
+				else if(mouse.btnM==1)
+				{
+					love.mousepressed(mouse.x,mouse.y,3,false);
+				}
+			}
+		});
+		canvas.addEventListener('mousemove', 
+		function(e)
+		{
+			mouse.y =e.y-canvas.offsetTop;
+			mouse.x =e.x-canvas.offsetLeft;
+		});
+		canvas.addEventListener('mouseup', 
+		function(e){
+ 
+			if(love.mousereleased!=undefined)
+			{
+				if(mouse.btnG==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,1,false);
+				}
+				else if(mouse.btnD==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,2,false);
+				}
+				else if(mouse.btnM==1)
+				{
+					love.mousereleased(mouse.x,mouse.y,3,false);
+				}
+			}
+			mouse.btnG = 0;
+			mouse.btnD = 0;
+			mouse.btnM = 0;
+		});
+		canvas.addEventListener("touchstart",
+		function(e){
+			console.log("touch");
+			e.preventDefault();
+			let touches = e.touches;
+			mouse.x = touches[0].clientX;
+			mouse.y = touches[0].clientY;
+			mouse.btnG = 1;
+			if(love.mousepressed!=undefined)
+			{
+				love.mousepressed(mouse.x,mouse.y,1,true); 
+			}
+		},false);
+		canvas.addEventListener("touchmove",
+		function(e){
+			console.log("touch move");
+			e.preventDefault();
+			let touches = e.touches;
+			mouse.x = touches[0].clientX;
+			mouse.y = touches[0].clientY;
+			mouse.btnG = 1;
+		},false);
+		canvas.addEventListener("touchend",
+		function(e){
+			e.preventDefault();
+			console.log("touch end");
+			mouse.x = 0;//e.targetTouches[0].x;
+			mouse.y = 0;//e.targetTouches[0].y;
+			mouse.btnG = 0;
+			if(love.mousereleased!=undefined)
+			{
+				love.mousereleased(mouse.x,mouse.y,1,true); 
+			}
+		},false);
+	}
+}
+function disableLeftClick()
+{
+	// disable click gauche
+	document.addEventListener("contextmenu", function(e) {
+		e.preventDefault()
+	});
+	document.addEventListener("keydown", function(e) {
+		function t(e) {
+			return e.stopPropagation ? e.stopPropagation() : window.event && (window.event.cancelBubble = !0), e.preventDefault(), !1
+		};
+		e.ctrlKey && e.shiftKey && 73 == e.keyCode && t(e), e.ctrlKey && e.shiftKey && 74 == e.keyCode && t(e), 83 == e.keyCode && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && t(e), e.ctrlKey && 85 == e.keyCode && t(e), 123 == event.keyCode && t(e)
+	});
+}
+
+
+function K_key(k)
+{
+    if(keyboard.key[0] != "nil")
+    {
+		if(k == null) return keyboard.key[0];
+		for(let i=0;i<2;i++)
+		{
+			if(keyboard.key[i] == k) return true;
+		}
+	}
+	else return false;
+}
+const sleep = async(milliseconds) =>{
+	return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+const Delay = async(ms)=>{
+	await sleep(ms);
+}
+
+
+function Timer()
+{
+	let t={
+		"t":0,
+		"test":function()
+		{
+			if(t.t>0) 
+			{
+	
+				t.t = t.t -1; 
+			}
+			if(t.t==0)
+			{
+				return true;
+			}
+			return false;
+		},
+		"start":function(n)
+		{
+			t.t = n;
+		}
+	};
+	return t;
+}
+
+function WriteSave(name,data)
+{
+	//limite to 5Mb;
+	localStorage.setItem(name, JSON.stringify(data));
+}
+function LoadSave(name)
+{
+	return JSON.parse(localStorage.getItem(name));
+}
+
+let font = "arial";
+//disableLeftClick();
+math={
+	random:function(min,max)
+	{
+		if(max == null) return Math.floor(Math.random()*Math.floor(min));
+		else return Math.floor(min + Math.random()*Math.floor(max));
+	},
+	rad:function(x)
+	{
+		return x*Math.PI/180;
+	}
+	
+};
+function print(a,b,c)
+{
+	if(b==null && c==null)
+		console.log(a)
+	else if(c==null && b!=null)
+		console.log(a,b);
+	else 
+		console.log(a,b,c);
+}
+function collide(a,b)
+{
+  if(a.x + a.w > b.x &&
+    a.x < b.x + b.w && 
+    a.y + a.h > b.y &&
+    a.y < b.y + b.h ) 
+    return true; 
+	return false;
+}
 game();
+

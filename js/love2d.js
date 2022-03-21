@@ -24,13 +24,20 @@ SOFTWARE.
 let mouse = {"x":0,"y":0,"w":6,"h":6,"btnG":0,"btnD":0,"btnM":0};
 let keyboard = {"key":["nil"]};
 let canvas = document.createElement("canvas");
-let context;
-const pmouse = true;
-const pkeyboard = true;
+let context = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 480;
 canvas.id = "canvas";
-context = canvas.getContext("2d");
+context.imageSmoothingEnabled = false;
+// context.msImageSmoothingEnabled = false;
+// context.webkitImageSmoothingEnabled = false;
+// context.mozImageSmoothingEnabled = false; 
+context.fillStyle = "#f0f0e2";
+context.fillRect(0,0,canvas.width,canvas.height);
+context.fillStyle = "#FFFFFF"; 
+
+const pmouse = true;
+const pkeyboard = true;
 let interval = null;
 document.body.insertBefore(canvas, document.body.childNodes[0]);
 document.body.overflow = "hidden";
@@ -38,9 +45,13 @@ document.body.position = "fixed";
 const freq = 60;
 let loading=0;
 let n_exit=false;
-curant_color="#000000";
-curant_volume=1.0;
-love = {
+let curant_color="#000000";
+let curant_volume=1.0;
+let font = "arial";
+let fps=0;
+let derniereUpdate=0;
+//disableLeftClick();
+let love = {
 	load:undefined,
 	update:undefined,
 	draw:undefined,
@@ -377,57 +388,65 @@ love = {
 
 	}
 };
-function game()
-{
-	load();  
-	if(love.load!=undefined) love.load();
-	context.fillStyle = "#f0f0e2";
-	context.fillRect(0,0,canvas.width,canvas.height);
-	context.fillStyle = "#FFFFFF";  
-	const dt = 1/60;
-	interval = 0;
-	function e(){
-		if(n_exit!=true) 
-		{
-			if(document.readyState=="complete")
+
+let math={
+	random:function(min,max)
+	{
+		if(max == null) return Math.floor(Math.random()*Math.floor(min));
+		else return Math.floor(min + Math.random()*Math.floor(max));
+	},
+	rad:function(x)
+	{
+		return x*Math.PI/180;
+	}
+	
+};
+
+function game(time){
+	window.requestAnimationFrame(game);
+	let dt = (time - derniereUpdate) / 1000;
+	if (dt < (1 / 60) - 0.001) return;
+	fps = 1 / dt;
+	derniereUpdate = time;
+	if(n_exit!=true) 
+	{
+		if(document.readyState=="complete")
+		{ 
+			if(loading==0)
 			{
-				if(loading==0 && love.load!=undefined)
-				{
-					loading=1;
-					love.load();
-				} 
-				context.fillStyle = "#f0f0e2";
-				context.fillRect(0,0,canvas.width,canvas.height);
-				context.fillStyle = "#FFFFFF";  
-				context.save(); 
-				if(love.update!=undefined)love.update(dt);
-				if(love.draw!=undefined)love.draw();
-				context.restore();
+				if(love.load!=undefined) love.load();
+				loading=1;
 			}
-			else
-			{
-				context.fillStyle= curant_color;
-				context.font = "50px arial";
-				context.fillText("--------------",160,70);
-				context.fillText("  loading ... ",160,120);
-				context.fillText("--------------",160,170);
-			}
-			Delay(dt*1000);
-			window.requestAnimationFrame(e); 
+			context.fillStyle = "#f0f0e2";
+			context.fillRect(0,0,canvas.width,canvas.height);
+			context.fillStyle = "#FFFFFF";  
+			context.save(); 
+			if(love.update!=undefined)love.update(dt);
+			if(love.draw!=undefined)love.draw();
+			context.restore();
 		}
 		else
 		{
-			context.fillStyle = "#000000";
-			context.fillRect(0,0,canvas.width,canvas.height);
-			context.fillStyle = "#FFFFFF";  
+			context.fillStyle= curant_color;
 			context.font = "50px arial";
-			context.fillText("game is stopped",160,120);
+			context.fillText("--------------",160,70);
+			context.fillText("  loading ... ",160,120);
+			context.fillText("--------------",160,170);
 		}
-	};
-	e();
+		// Delay(dt*1000);
 
+	}
+	else
+	{
+		context.fillStyle = "#000000";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle = "#FFFFFF";  
+		context.font = "50px arial";
+		context.fillText("game is stopped",160,120);
+	}
 }
-function load()
+
+function load_event()
 {	
 	if(pkeyboard == true)
 	{
@@ -619,20 +638,7 @@ function LoadSave(name)
 	return JSON.parse(localStorage.getItem(name));
 }
 
-let font = "arial";
-//disableLeftClick();
-math={
-	random:function(min,max)
-	{
-		if(max == null) return Math.floor(Math.random()*Math.floor(min));
-		else return Math.floor(min + Math.random()*Math.floor(max));
-	},
-	rad:function(x)
-	{
-		return x*Math.PI/180;
-	}
-	
-};
+
 function print(a,b,c)
 {
 	if(b==null && c==null)
@@ -651,5 +657,6 @@ function collide(a,b)
     return true; 
 	return false;
 }
-game();
+load_event();  
+window.requestAnimationFrame(game);
 

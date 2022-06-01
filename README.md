@@ -11,7 +11,7 @@
 ## features
 - print text, rectangle, cercle , line
 - load image, song ,video and use it
-- keyboard and mouse (touch basic) input
+- keyboard, mouse and touch
 - setting window and icon 
  <br>see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
  

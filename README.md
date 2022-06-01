@@ -72,11 +72,11 @@
 			love.graphics.setColor(200,2,2,125);
 			love.graphics.print("hello ",200,250,0,25);
 			love.graphics.setColor(0,200,0,125);
-			 love.graphics.draw(pic,player.x,player.y,0,64,64);
-			 love.graphics.setColor(200,2,2);
-			 love.graphics.line(Mx,0,300,34);
-			  love.graphics.draw(pic,150,50,0,64,64);
-			  love.graphics.draw(vid,23,23);
+			love.graphics.draw(pic,player.x,player.y,0,64,64);
+			love.graphics.setColor(200,2,2);
+			love.graphics.line(Mx,0,300,34);
+			love.graphics.draw(pic,150,50,0,64,64);
+			love.graphics.draw(vid,23,23);
 		
 		}
 		

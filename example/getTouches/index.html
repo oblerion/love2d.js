@@ -1,0 +1,29 @@
+<!DOCTYPE html> <html id="html" lang="fr"/>
+<title>afterdark</title>
+<head>
+	<meta charset="UTF-8" name="viewport"content="width=device-width"/>
+</head>
+<body>
+	<script src="js/love2d.js"></script>
+  <script>
+  	love.update=function(dt)
+    {
+    }
+	
+    love.draw=function()
+    {
+
+      let i;
+      //list id of touch
+      let t = love.touch.getTouches();
+      let touch;
+      for(i=0;i<t.length;i++)
+      {
+        // get pos of eatch touche
+        touch=love.touch.getPosition(t[i]);
+        love.graphics.print("touche "+i+" x: "+touch.x+" y: "+touch.y,25,(i+1)*25);
+      }
+    }
+  </script>
+</body>
+</html>

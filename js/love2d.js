@@ -1,5 +1,5 @@
 /*
-love2d.js version b0.3
+love2d.js version b0.4
 MIT License
 Copyright (c) 2022 oblerion
 
@@ -24,20 +24,21 @@ SOFTWARE.
 let mouse = {"x":0,"y":0,"w":6,"h":6,"btnG":0,"btnD":0,"btnM":0};
 let keyboard = {"key":["nil"]};
 let canvas = document.createElement("canvas");
-let context = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 480;
 canvas.id = "canvas";
-context.imageSmoothingEnabled = false;
-// context.msImageSmoothingEnabled = false;
-// context.webkitImageSmoothingEnabled = false;
-// context.mozImageSmoothingEnabled = false; 
+let context = canvas.getContext("2d");
+//context.imageSmoothingEnabled = false;
+//context.msImageSmoothingEnabled = false;
+//context.webkitImageSmoothingEnabled = false;
+//context.mozImageSmoothingEnabled = false; 
 context.fillStyle = "#f0f0e2";
 context.fillRect(0,0,canvas.width,canvas.height);
 context.fillStyle = "#FFFFFF"; 
 
 const pmouse = true;
 const pkeyboard = true;
+let touches=[];
 let interval = null;
 document.body.insertBefore(canvas, document.body.childNodes[0]);
 document.body.overflow = "hidden";
@@ -59,6 +60,9 @@ let love = {
 	mousereleased:undefined,
 	keypressed:undefined,
 	keyreleased:undefined,
+	touchpressed:undefined,
+	touchreleased:undefined,
+	touchmoved:undefined,
 	window:{
 		setMode:function(width,height)
 		{
@@ -129,13 +133,13 @@ let love = {
 		}
 	},
 	graphics:{
-		//newFont:function(filename,url)
-		//{
-			//let f = new FontFace(filename,url);
+		newFont:function(filename,url)
+		{
+			let f = new FontFace(filename,url);
 			//return f;
-			////f.load();
-			////document.fonts.add(f);
-		//},
+			f.load();
+			document.fonts.add(f);
+		},
 		newImage:function(filename)
 		{
 			let img; 
@@ -300,6 +304,7 @@ let love = {
 		},
 		line:function(x,y,x2,y2)
 		{
+			context.fillStyle = curant_color;
 			context.beginPath();
 			context.moveTo(x,y);
 			context.lineTo(x2,y2);
@@ -313,7 +318,10 @@ let love = {
 			{ 
 				context.fillStyle = curant_color;
 				context.fill();
+				context.globalAlpha = 0;
+				context.arc(x, y, radius, 0, 4 * Math.PI, false);
 			}
+
 			context.stroke();
 			
 		},
@@ -380,6 +388,28 @@ let love = {
 			return false;
 		}
 	},
+	touch:{
+		getPosition:function(id)
+		{
+			let t={x:0,y:0};
+			if(id<touches.length && id>=0)
+			{
+				t.x = touches[id].clientX;
+				t.y = touches[id].clientY;
+			}
+			return t;
+		},
+		getTouches:function()
+		{
+			let i;
+			let t=[];
+			for(i=0;i<touches.length;i++)
+			{
+				t.push(i);
+			}
+			return t;
+		}
+	},
 	event:{
 		quit:function()
 		{
@@ -401,10 +431,10 @@ let math={
 	}
 	
 };
-
+let dt;
 function game(time){
 	window.requestAnimationFrame(game);
-	let dt = (time - derniereUpdate) / 1000;
+	dt = (time - derniereUpdate) / 1000;
 	if (dt < (1 / 60) - 0.001) return;
 	fps = 1 / dt;
 	derniereUpdate = time;
@@ -442,7 +472,7 @@ function game(time){
 		context.fillRect(0,0,canvas.width,canvas.height);
 		context.fillStyle = "#FFFFFF";  
 		context.font = "50px arial";
-		context.fillText("game is stopped",160,120);
+		context.fillText("game is stopped",200,180);
 	}
 }
 
@@ -536,35 +566,64 @@ function load_event()
 		function(e){
 			console.log("touch");
 			e.preventDefault();
-			let touches = e.touches;
-			mouse.x = touches[0].clientX;
-			mouse.y = touches[0].clientY;
-			mouse.btnG = 1;
-			if(love.mousepressed!=undefined)
-			{
-				love.mousepressed(mouse.x,mouse.y,1,true); 
-			}
+			
+			//console.log(touches);
+			//mouse.x = touches[0].clientX;
+			//mouse.y = touches[0].clientY;
+			//mouse.btnG = 1;
+			//let i;
+			//if(love.touchpressed!=undefined)
+			//{
+				//for(i=0;i<e.changedTouches.length;i++)
+				//{
+					//love.touchpressed();
+				//}
+				////love.touchpressed(mouse.x,mouse.y,1,true); 
+			//}
+			touches = e.touches;
 		},false);
 		canvas.addEventListener("touchmove",
 		function(e){
 			console.log("touch move");
 			e.preventDefault();
-			let touches = e.touches;
-			mouse.x = touches[0].clientX;
-			mouse.y = touches[0].clientY;
-			mouse.btnG = 1;
+			touches=e.touches;
+			//let touches = e.touches;
+			//mouse.x = touches[0].clientX;
+			//mouse.y = touches[0].clientY;
+			//mouse.btnG = 1;
+			//let i;
+			//if(love.touchmoved!=undefined)
+			//{
+				//for(i=0;i<e.changedTouches.length;i++)
+				//{
+					////love.touchmoved();
+				//}		
+			//}
+			touches=e.touches;
 		},false);
 		canvas.addEventListener("touchend",
 		function(e){
+			
 			e.preventDefault();
 			console.log("touch end");
-			mouse.x = 0;//e.targetTouches[0].x;
-			mouse.y = 0;//e.targetTouches[0].y;
-			mouse.btnG = 0;
-			if(love.mousereleased!=undefined)
-			{
-				love.mousereleased(mouse.x,mouse.y,1,true); 
-			}
+			//mouse.x = touches[0].clientX;
+			//mouse.y = touches[0].clientY;
+			//mouse.btnG = 0;
+			//let i;
+			//let last_touch={};
+			//if(e.touches.length>0)
+			//{
+				//for(i=0;i<touches.length;i++)
+				//{
+					
+				//}
+			//}
+			//if(love.touchreleased!=undefined)
+			//{
+				////love.touchreleased(mouse.x,mouse.y,1,true); 
+			//}
+			//console.log(e.changedTouches);
+			touches = e.touches;
 		},false);
 	}
 }
@@ -585,16 +644,17 @@ function disableLeftClick()
 
 function K_key(k)
 {
-    if(keyboard.key[0] != "nil")
-    {
-		if(k == null) return keyboard.key[0];
+  if(keyboard.key[0] != "nil")
+  {
+		// if(k == void) return keyboard.key[0];
 		for(let i=0;i<2;i++)
 		{
 			if(keyboard.key[i] == k) return true;
 		}
 	}
-	else return false;
+	return false;
 }
+
 const sleep = async(milliseconds) =>{
 	return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
@@ -659,4 +719,3 @@ function collide(a,b)
 }
 load_event();  
 window.requestAnimationFrame(game);
-

@@ -3,15 +3,18 @@
 <title> love2d.js </title>
 <head>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-	
+	<script nomodule>
+		document.write("your old browser don't support module type : need update it");
+	</script>
 </head>
 
 <body>
-	<script src="../../js/love2d.js"></script>
-	<script>
-
-		love.window.setMode(1000,500);
-		love.graphics.setFont("ani");
+	<script type="module" src="../../js/love2d.js"></script>
+	<script type="module">
+		import {Love} from "../../js/love2d.js";
+		let love = new Love();
+		love.window_setMode(1000,500);
+		love.graphics_setFont("ani");
 
 		// update loop function
 		love.update=function()
@@ -22,12 +25,12 @@
 		love.draw =function()
 		{
 			let Mx = love.mouse.getY();
-			love.graphics.setColor(200,2,2);
-			love.graphics.print("hello",200,250,65);
-			love.graphics.setColor(0,200,0);
-			love.graphics.rectangle("fill",200,200,20,20);
-			love.graphics.line(Mx,0,300,34);
-			if(love.keyboard.isDown("up")) love.graphics.circle("line",230,340,25);
+			love.graphics_setColor(200,2,2);
+			love.graphics_print("hello",200,250,65);
+			love.graphics_setColor(0,200,0);
+			love.graphics_rectangle("fill",200,200,20,20);
+			love.graphics_line(Mx,0,300,34);
+			if(love.keyboard_isDown("up")) love.graphics_circle("line",230,340,25);
 		}
 		
 	</script>

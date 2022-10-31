@@ -628,10 +628,10 @@ class Love extends Canvas {
 	audio_stop(clas) {
 		clas.pause();
 	}
-	graphics_getWidth() {
+	window_getWidth() {
 		return this.cgetSize().w;
 	}
-	graphics_getHeight() {
+	window_getHeight() {
 		return this.cgetSize().h;
 	}
 	async graphics_newFont(filename, url) {

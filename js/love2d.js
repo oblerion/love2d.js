@@ -635,12 +635,12 @@ class Love extends Canvas {
 		clas.pause();
 	}
 
-	async graphics_newFont(filename, url) {
+	/*async graphics_newFont(filename, url) {
 		let f = new FontFace(filename, url);
 		//return f;
 		f.load();
 		document.fonts.add(f);
-	}
+	}*/
 	graphics_newImage(filename) {
 		let img;
 		img = new Image();

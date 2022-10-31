@@ -30,7 +30,7 @@
 <body>
 	<script type="module" src="love2d.js"></script>
 	<script type="module">
-		import {Love} from "./love2d.js";
+		import Love from "./love2d.js";
 		let love = new Love();
 		player = {x:10,y:100};	
 		love.load=function()

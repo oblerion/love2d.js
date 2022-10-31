@@ -9,9 +9,9 @@
 [love2d](https://love2d.org) api for html5 game, not using emscripten, made with equivalent of lua functions written in javascript
 
 ## features
-- print text, rectangle, cercle , line
+- draw : text, rectangle, cercle , line
 - load image, song ,video and use it
-- keyboard, mouse and touch
+- input : keyboard, mouse and touch
 - setting window and icon 
  <br>see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
  

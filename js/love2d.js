@@ -584,6 +584,12 @@ class Love extends Canvas {
 		d.href = s;
 		document.head.appendChild(d);
 	}
+	window_getWidth() {
+		return this.cgetSize().w;
+	}
+	window_getHeight() {
+		return this.cgetSize().h;
+	}
 	audio_newSource(filename, type) {
 		let sg;
 		if (type == "static") {
@@ -628,12 +634,7 @@ class Love extends Canvas {
 	audio_stop(clas) {
 		clas.pause();
 	}
-	window_getWidth() {
-		return this.cgetSize().w;
-	}
-	window_getHeight() {
-		return this.cgetSize().h;
-	}
+
 	async graphics_newFont(filename, url) {
 		let f = new FontFace(filename, url);
 		//return f;

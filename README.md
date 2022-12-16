@@ -16,13 +16,15 @@
  <br>see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
  
 ## example
+a simple index.html
 ```html
 <!DOCTYPE html>
 <html id="html" lang="fr">
 <title> simple test </title>
 <head>
-	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>	
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<script nomodule>
+		// if no support for module
 		document.write("your old browser don't support module type : need update it");
 	</script>
 </head>
@@ -33,9 +35,11 @@
 		import Love from "./love2d.js";
 		let love = new Love();
 		player = {x:10,y:100};	
+		// loading function
+		
 		love.load=function()
 		{
-			// set width ans height of game
+			// set width and height screen of game
 			love.window_setMode(1000,500);
 			// set font 
 			love.graphics_setFont("arial");
@@ -69,6 +73,7 @@
 			//print(player.x,player.y);
 		}
 		// draw loop function
+		
 		love.draw =function()
 		{
 			let Mx = love.mouse_getX();	

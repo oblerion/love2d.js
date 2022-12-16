@@ -21,7 +21,7 @@ const MOUSE=true;
 const KEYBOARD=false;
 const TOUCH=false;
  ```
-true mean it load event, false not. So don't forget to change it.
+true mean it load event at start, false not. So don't forget to change it.
 ## example
 a simple index.html
 ```html

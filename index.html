@@ -1,0 +1,54 @@
+<!DOCTYPE html> 
+<html id="html" lang="en">
+<title>love2d.js</title>
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+	<script type="module">
+		import {Love} from "./js/love2d.js";
+		let love = new Love();
+		
+		love.load=function()
+		{
+			love.window_setMode(800,380);
+			love.graphics_setFont("monospace");
+			
+			
+		}
+		
+		love.update=function(dt)
+		{}
+		
+		love.draw=function()
+		{
+			love.graphics_setColor(255,255,255,255);
+			love.graphics_rectangle("fill",0,0,800,480);
+			love.graphics_setColor(10,10,10,255);
+			love.graphics_print("Love2d.js",23,45,0,30);
+			love.graphics_setColor(150,0,50,255);
+			love.graphics_print("Love2d.js",21,45,0,30);
+			love.graphics_print("love2d api for html5 game, ",24,70,0,15);
+			love.graphics_print("not using emscripten, ",24,87,0,15);
+			love.graphics_print("100% in javascript",24,102,0,15);
+			
+			love.graphics_setColor(10,10,10,255);
+			love.graphics_print("features",24,140,0,20);
+			love.graphics_setColor(150,0,50,255);
+			love.graphics_print("features",22,140,0,20);
+			
+			love.graphics_print("* draw : text,rectangle,cercle,line",24,160,0,15);
+			love.graphics_print("* load image,song,video and use it",24,180,0,15);
+			love.graphics_print("* input : keyboard,mouse and touch",24,200,0,15);
+			love.graphics_print("* setting window and icon",24,220,0,15);
+			love.graphics_print("* disable click popup menu / console",24,240,0,15);
+			
+			love.graphics_print("made with love2d.js by oblerion",24,280,0,15);
+		}
+	
+	</script> 
+	<a href="https://github.com/oblerion/love2d.js/wiki">api</a>
+	<a href="https://github.com/oblerion/love2d.js">github</a>
+	
+</body>
+</html>

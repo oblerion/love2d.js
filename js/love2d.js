@@ -21,11 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-export {Love,Canvas,Color,disableRightClickMenu, disableConsole,collide,
-		math_random};
+
 const MOUSE = true;
 const KEYBOARD = false;
-const TOUCH = false;
+const TOUCH = true;
 class Input {
 	constructor() {
 		this.mouse = { "x": 0, "y": 0, "w": 6, "h": 6, "btnG": 0, "btnD": 0, "btnM": 0 };
@@ -105,8 +104,8 @@ class Canvas extends Input{
 		this.canvas = document.createElement("canvas");
 		this.canvas.width = w;
 		this.canvas.height = h;
-//;
-		this.canvas.style = "cursor:none;padding:0;margin:auto;display:block";
+//cursor:none;
+		this.canvas.style = "padding:0;margin:auto;display:block";
 		this.canvas.id = "canvas_" + id;
 		this.context = this.canvas.getContext("2d");
 
@@ -131,10 +130,18 @@ class Canvas extends Input{
 	cgetSize() {
 		return { w: this.canvas.width, h: this.canvas.height };
 	}
-	csetAlpha(a)
+	cgetWidthText = function(text)
 	{
-		this.context.globalAlpha=a/255;
-	}
+		this.context.font = text.font;
+		const textWidth = this.context.measureText(text.text).width;
+		return textWidth;
+	};
+	cgetHeightText = function(text)
+	{
+		this.context.font = text.font;
+		const textHeight = this.context.measureText(text.text).height;
+		return textHeight;
+	};
 	csetColor(r, g, b, a) {
 		let hex="";
 		if(typeof(r)=="string")
@@ -519,12 +526,12 @@ function START(love) {
 		if (n_exit != true) {
 			if (document.readyState == "complete") {
 				if (loading == 0) {
-					love.csetCursorStyle("none");
+					//love.csetCursorStyle("none");
 					if (love.load != undefined) love.load();
 					loading = 1;
 				}
 				love.graphics_setColor("#f0f0e2");
-				love.graphics_rectangle("fill", 0, 0, love.graphics_getWidth(), love.graphics_getHeight());
+				love.graphics_rectangle("fill", 0, 0, love.cgetSize().w, love.cgetSize().h);
 				love.graphics_setColor(1, 1, 1, 1);
 				love.context.save();
 				if (love.update != undefined) love.update(love.dt);
@@ -584,12 +591,6 @@ class Love extends Canvas {
 		d.href = s;
 		document.head.appendChild(d);
 	}
-	window_getWidth() {
-		return this.cgetSize().w;
-	}
-	window_getHeight() {
-		return this.cgetSize().h;
-	}
 	audio_newSource(filename, type) {
 		let sg;
 		if (type == "static") {
@@ -634,13 +635,34 @@ class Love extends Canvas {
 	audio_stop(clas) {
 		clas.pause();
 	}
-
-	/*async graphics_newFont(filename, url) {
+	graphics_getWidth() {
+		return this.cgetSize().w;
+	}
+	graphics_getHeight() {
+		return this.cgetSize().h;
+	}
+	graphics_newText(pfont,ptext)
+	{// in work
+		let text={};
+		text.text = ptext;
+		text.font = pfont;
+		text.getWidth = function()
+		{
+			//Love.context.font = text.font;
+			//const textWidth = ctx.measureText(text.text).width;
+			return this.cgetWidthText(text.text);
+		};
+		text.getHeight = function()
+		{
+			return this.cgetHeightText(text.text);
+		};
+	}
+	async graphics_newFont(filename, url) {
 		let f = new FontFace(filename, url);
 		//return f;
 		f.load();
 		document.fonts.add(f);
-	}*/
+	}
 	graphics_newImage(filename) {
 		let img;
 		img = new Image();
@@ -677,10 +699,6 @@ class Love extends Canvas {
 	}
 	graphics_getColor() {
 		return this.curant_color;
-	}
-	graphics_setAlpha(a)
-	{
-		this.csetAlpha(a);
 	}
 	graphics_setColor(r, g, b, a) {
 		this.csetColor(r, g, b, a);
@@ -722,3 +740,4 @@ class Love extends Canvas {
 		this.n_exit = true;
 	}
 }
+export {Love,Canvas,Color,disableRightClickMenu,collide,math_random};

@@ -12,8 +12,7 @@
 - draw : text, rectangle, cercle , line
 - load image, song ,video and use it
 - input : keyboard, mouse and touch
-- setting window and icon 
-- disable click popup menu / console 
+- setting window and icon  
  <br>see [wiki](https://github.com/oblerion/love2d.js/wiki) for more info
  
 !! At start of love2d.js, there is it !!

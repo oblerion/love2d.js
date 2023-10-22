@@ -18,9 +18,9 @@
  
 !! At start of love2d.js, there is it !!
 ```js
-const MOUSE=true;
-const KEYBOARD=false;
-const TOUCH=false;
+const LOVE2D_MOUSE=true;
+const LOVE2D_KEYBOARD=true;
+const LOVE2D_TOUCH=true;
  ```
 true mean it load event at start, false not. So don't forget to change it.
 ## example
@@ -38,10 +38,9 @@ a simple index.html
 </head>
 
 <body>
-	<script type="module" src="love2d.js"></script>
 	<script type="module">
-		import Love from "./love2d.js";
-		let love = new Love();
+		import love from "./love2d.js";
+
 		player = {x:10,y:100};	
 		// loading function
 		

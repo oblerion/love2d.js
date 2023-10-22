@@ -7,23 +7,20 @@
 		// if no support for module
 		document.write("your old browser don't support module type : need update it");
 	</script>
-</head>
-<body>
 	<script type="module">
-		import {Love} from "./js/love2d.js";
-		let love = new Love();
+		import {love} from "./js/love2d.js";
 		
 		love.load=function()
 		{
 			love.window_setMode(800,380);
 			love.graphics_setFont("monospace");
-			
-			
 		}
-		
 		love.update=function(dt)
-		{}
-		
+		{
+
+			if(love.mouse_isDown(1)==true) {count++;}
+		}
+	
 		love.draw=function()
 		{
 			love.graphics_setColor(255,255,255,255);
@@ -49,10 +46,16 @@
 			
 			love.graphics_print("made with love2d.js by oblerion",24,280,0,15);
 		}
-	
 	</script> 
-	<a href="https://github.com/oblerion/love2d.js/wiki">api</a>
-	<a href="https://github.com/oblerion/love2d.js">github</a>
-	
+</head>
+<body>
+	<main>
+		<canvas id="canvas_love2d"></canvas>
+	</main>	
+	<footer>
+		<a href="https://github.com/oblerion/love2d.js/wiki">api</a>
+		<a href="https://github.com/oblerion/love2d.js">github</a>
+	</footer>
 </body>
+
 </html>

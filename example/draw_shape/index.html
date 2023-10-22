@@ -9,10 +9,8 @@
 </head>
 
 <body>
-	<script type="module" src="../../js/love2d.js"></script>
 	<script type="module">
-		import {Love} from "../../js/love2d.js";
-		let love = new Love();
+		import {love} from "../../js/love2d.js";
 		love.window_setMode(1000,500);
 		love.graphics_setFont("ani");
 
@@ -24,12 +22,13 @@
 		// draw loop function
 		love.draw =function()
 		{
-			let Mx = love.mouse.getY();
+			let My = love.mouse_getY();
+			let Mx = love.mouse_getX();
 			love.graphics_setColor(200,2,2);
 			love.graphics_print("hello",200,250,65);
 			love.graphics_setColor(0,200,0);
 			love.graphics_rectangle("fill",200,200,20,20);
-			love.graphics_line(Mx,0,300,34);
+			love.graphics_line(Mx,My,300,34);
 			if(love.keyboard_isDown("up")) love.graphics_circle("line",230,340,25);
 		}
 		

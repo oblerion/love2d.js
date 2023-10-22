@@ -5,12 +5,9 @@
 	<script nomodule>
 		document.write("your old browser don't support module type : need update it");
 	</script>
-</head>
-<body>
-	  <script type="module" src="../../js/love2d.js"></script>
-	  <script type="module">
-		import {Love} from "../../js/love2d.js";
-		let love = new Love();
+	<script type="module">
+		import {love} from "../../js/love2d.js";
+	
 		love.update=function(dt)
 		{
 		}
@@ -28,6 +25,10 @@
 				love.graphics_print("touche "+i+" x: "+touch.x+" y: "+touch.y,25,(i+1)*25);
 			}
 		}
-	  </script>
+
+	</script>
+</head>
+<body>
+
 </body>
 </html>

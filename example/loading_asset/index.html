@@ -11,14 +11,17 @@
 <body>
 	<script type="module" src="../../js/love2d.js"></script>
 	<script type="module">
-		import {Love} from "../../js/love2d.js";
-		let love = new Love();
-		player = {x:10,y:100};
-			
+		import {love} from "../../js/love2d.js";
+		let player = {x:10,y:100};
+		let pic;
+		let q;
+		let song;
+		let vid;
+
 		love.load=function()
 		{
 			// set width ans height of game
-			love.window_setMode(1000,500);
+			love.window_setMode(800,500);
 			// set font 
 			love.graphics_setFont("arial");
 			// load image

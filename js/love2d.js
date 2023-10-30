@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-const LOVE2D_VERSION = "b0.6"
+const LOVE2D_VERSION = "b0.6-1"
 const LOVE2D_MOUSE = true;
 const LOVE2D_KEYBOARD = true;
 const LOVE2D_TOUCH = true;
@@ -77,10 +77,20 @@ class Love
     }
 	system_openURL(url)
 	{
-		if(this.timer_url<=0)
+		if(window.open(url,"_top","popup=false")!=null)
 		{
-			this.timer_url=0.5;
-			if(window.open(url)!=null)return true;
+			this.mouse = {
+				"x":0,
+				"y":0,
+				"w":6,
+				"h":6,
+				"btn":[false,false,false]
+			};
+			this.keyboard = {
+				"key":[]
+			};
+  			this.touches = [];
+			return true;
 		}
 		return false;
 	}
@@ -336,11 +346,11 @@ class Love
 	}
 	graphics_rectangle(mode, x, y, w, h) 
     {
-	    if (mode == "fill") {
+	    if (mode === "fill") {
 			this.context.fillStyle = this.curant_color;
 			this.context.fillRect(x, y, w, h);
 		}
-		if (mode == "line") {
+		if (mode === "line") {
 			this.context.strokeStyle = this.curant_color;
 			this.context.strokeRect(x, y, w, h);
 		}
@@ -507,7 +517,7 @@ function _main_loop(time)
 			love.graphics_rectangle("fill", 0, 0, love.graphics_getWidth(), love.graphics_getHeight());
 			love.graphics_setColor(1, 1, 1, 1);
 			love.context.save();
-			if(love.timer_url>0) love.timer_url-=love.dt;
+			
 			if (love.update != undefined) love.update(love.dt);
 			if (love.draw != undefined) love.draw();
 			love.context.restore();

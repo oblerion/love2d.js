@@ -8,6 +8,15 @@
 	<script type="module">
 		import {love} from "../../js/love2d.js";
 	
+
+		love.touchpressed=function(id, x, y, dx, dy, pressure )
+		{
+			love.graphics_print("touchepressed "+id+" x: "+x+" y: "+y,75,(id+1)*25);
+		}
+		love.touchreleased=function(id, x, y, dx, dy, pressure )
+		{
+			love.graphics_print("touchereleased "+id+" x: "+x+" y: "+y,75,(id+1)*25);
+		}
 		love.update=function(dt)
 		{
 		}

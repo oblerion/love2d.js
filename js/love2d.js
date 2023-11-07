@@ -94,6 +94,28 @@ class Love
 		}
 		return false;
 	}
+	system_getOs()
+	{	var userAgent = window.navigator.userAgent
+		var OSName = "Unknown";
+		if (userAgent.indexOf("Windows NT 10.0")!= -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 6.3") != -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 6.2") != -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 6.1") != -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 6.0") != -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 5.1") != -1) OSName="Windows";
+		if (userAgent.indexOf("Windows NT 5.0") != -1) OSName="Windows";
+		if (userAgent.indexOf("Mac")            != -1) OSName="OS X";
+		if (userAgent.indexOf("iPhone")!= -1 ||
+			userAgent.indexOf("iPad")!=-1 ||
+			userAgent.indexOf("iPod")!=-1) 
+				OSName="iOS";
+		if (userAgent.indexOf("X11")            != -1) OSName="UNIX";
+		if (userAgent.indexOf("Linux")          != -1) OSName="Linux";
+		if (userAgent.indexOf("Android")        != -1) OSName="Android";
+		if (userAgent.indexOf("CrOS")           != -1) OSName="Chrome OS";
+		// Window, OS X, UNIX, LINUX, Android, Chrome OS
+		return OSName;
+	}
     timer_getDelta()
     {
         return this.dt;

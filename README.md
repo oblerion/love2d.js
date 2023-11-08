@@ -3,7 +3,7 @@
 ## Table of content
 - [Description](#Description)
 - [Features](#Features)
-- [example](#Example)
+- [Example](#Example)
 
 ## Description
 [love2d](https://love2d.org) api for html5 game, not using emscripten, made with equivalent of lua functions written in javascript

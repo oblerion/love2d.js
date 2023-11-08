@@ -1,14 +1,14 @@
 # love2d.js
 
 ## Table of content
-- [Description](#description)
-- [Features](#features)
-- [example](#example)
+- [Description](#Description)
+- [Features](#Features)
+- [example](#Example)
 
-## description
+## Description
 [love2d](https://love2d.org) api for html5 game, not using emscripten, made with equivalent of lua functions written in javascript
 
-## features
+## Features
 - draw : text, rectangle, cercle , line
 - load image, song ,video and use it
 - input : keyboard, mouse and touch
@@ -22,7 +22,7 @@ const LOVE2D_KEYBOARD=true;
 const LOVE2D_TOUCH=true;
  ```
 true mean it load event at start, false not. So don't forget to change it.
-## example
+## Example
 a simple index.html
 ```html
 <!DOCTYPE html>

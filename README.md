@@ -15,13 +15,6 @@
 - setting window and icon  
  <br>see [manual](https://github.com/oblerion/love2d.js/blob/main/love2djs_manual_en.pdf) for more info
  
-!! At start of love2d.js, there is it !!
-```js
-const LOVE2D_MOUSE=true;
-const LOVE2D_KEYBOARD=true;
-const LOVE2D_TOUCH=true;
- ```
-true mean it load event at start, false not. So don't forget to change it.
 ## Example
 a simple index.html
 ```html

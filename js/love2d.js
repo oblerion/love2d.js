@@ -109,9 +109,9 @@ class Love
 	{
 		if(typeof(name)=="string")
 		{
-			return _LoadSave(name);
+			return _LoadSave(name) || {};
 		}
-		return null;
+		return {};
 	}
 	system_openURL(url)
 	{

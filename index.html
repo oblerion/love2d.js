@@ -9,7 +9,8 @@
 	</script>
 	<script type="module">
 		import {love} from "./js/love2d.js";
-		
+		//love.system_writeSave("savet",{name:"ok"});
+		console.log(love.system_readSave("savet").name)
 		love.load=function()
 		{
 			love.window_setMode(800,380);
@@ -18,7 +19,6 @@
 		love.update=function(dt)
 		{
 
-			if(love.mouse_isDown(1)==true) {count++;}
 		}
 	
 		love.draw=function()

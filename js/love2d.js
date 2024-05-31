@@ -18,16 +18,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-const LOVE2D_VERSION = "b0.6-1"
+const LOVE2D_VERSION = "b0.6.2"
 const LOVE2D_MOUSE = true;
 const LOVE2D_KEYBOARD = true;
 const LOVE2D_TOUCH = true;
 
-function WriteSave(name, data) {
-	//limite to 5Mb;
-	localStorage.setItem(name, JSON.stringify(data));
+function _sizeOf(value)
+{
+	switch(typeof(value))
+	{
+		case "undefined": return 0;
+		case "boolean": return 4;
+		case "number": return 8;
+		case "string": return 2 * value.length;
+		default:;
+	}
+	// const typeSizes = {
+	// "object": item => !item ? 0 : Object
+	// .keys(item)
+	// .reduce((total, key) => _sizeOf(key) + _sizeOf(item[key]) + total, 0)
+	// };
+	// return typeSizes[typeof(value)];
+	return 0;
 }
-function LoadSave(name) {
+function _WriteSave(name, data) 
+{
+	//limite to 5Mb;
+	const sjson = JSON.stringify(data);
+	if(_sizeOf(sjson)<5000000)
+	localStorage.setItem(name,sjson);
+}
+function _LoadSave(name) 
+{
 	return JSON.parse(localStorage.getItem(name));
 }
 function collide(a, b) {
@@ -75,6 +97,22 @@ class Love
         this.lastUpdate = 0;
         this.loading = 0;
     }
+	system_writeSave(name,val)
+	{
+		if(typeof(name)=="string" &&
+			typeof(val)=="object")
+		{
+			_WriteSave(name,val);
+		}
+	}
+	system_readSave(name)
+	{
+		if(typeof(name)=="string")
+		{
+			return _LoadSave(name);
+		}
+		return null;
+	}
 	system_openURL(url)
 	{
 		if(window.open(url,"_top","popup=false")!=null)
@@ -95,8 +133,8 @@ class Love
 		return false;
 	}
 	system_getOs()
-	{	var userAgent = window.navigator.userAgent
-		var OSName = "Unknown";
+	{	let userAgent = window.navigator.userAgent
+		let OSName = "Unknown";
 		if (userAgent.indexOf("Windows NT 10.0")!= -1) OSName="Windows";
 		if (userAgent.indexOf("Windows NT 6.3") != -1) OSName="Windows";
 		if (userAgent.indexOf("Windows NT 6.2") != -1) OSName="Windows";
@@ -133,6 +171,17 @@ class Love
 		d.href = s;
 		document.head.appendChild(d);
     }
+	window_getTitle()
+	{
+		return document.title;
+	}
+	window_setTitle(title)
+	{
+		if( typeof(title)=="string" )
+		{
+			document.title=title;
+		}
+	}
 	audio_newSource(filename, type) {
 		let sg;
 		if (type == "static") {
@@ -380,13 +429,14 @@ class Love
 	graphics_circle(mode, x, y, radius) 
     {
 		this.context.beginPath();	
-		if (mode == "fill") {
+		if (mode == "fill") 
+		{
 			this.context.fillStyle = this.curant_color;
 			this.context.strokeStyle = this.curant_color;
 			this.context.arc(x, y, radius, 0, 4 * Math.PI, false);
 			this.context.fill();
 		}
-		else
+		if(mode == "line")
 		{
 			this.context.strokeStyle = this.curant_color;
 			this.context.arc(x, y, radius, 0, 4 * Math.PI, false);
@@ -531,7 +581,7 @@ function _main_loop(time)
 	if (love.n_exit != true) {
 		if (document.readyState == "complete") {
 			if (love.loading == 0) {
-				//love.csetCursorStyle("none");
+				love.canvas.style.cursor = "auto";
 				if (love.load != undefined) love.load();
 				love.loading = 1;
 			}
@@ -566,7 +616,8 @@ function _main_loop(time)
 //--------------- EVENT -----------------
 function _event_onkeydown(e) 
 {
-	if (love.keyboard.key[0] != "nil") {
+	if (love.keyboard.key[0] != "nil") 
+	{
 		for (let i = 0; i < love.keyboard.key.lenght; i++) {
 			if (e.key == love.keyboard.key[i]) {
 				return;
@@ -677,5 +728,5 @@ if (LOVE2D_TOUCH == true) {
 	_disableRightClickMenu();
 }
 window.requestAnimationFrame(_main_loop);
-export {love,math_random,WriteSave,LoadSave};
+export {love,math_random};
 

@@ -504,16 +504,17 @@ class Love
 		if (id < this.touches.length && id >= 0) {
 			t.x = this.touches[id].clientX;
 			t.y = this.touches[id].clientY;
+			t.state = this.touches[id].state;
 		}
 		return t;
 	}
 	touch_getTouches() {
 		let i;
-		let t = [];
+		let lt = [];
 		for (i = 0; i < this.touches.length; i++) {
-			t.push(i);
+			lt.push(i);
 		}
-		return t;
+		return lt;
 	}
 	event_quit() {
 		this.n_exit = true;
@@ -678,35 +679,65 @@ function _event_onmouseup(e) {
 	}
 }
 function _event_ontouchstart(e) {
-	//console.log("touch");
-	e.preventDefault();
-	love.touches = e.touches;
-	if(love.touchpressed != undefined)
+	//console.log("touch start");
+	//e.preventDefault();
+	
+	for(let i=0;i<e.touches.length;i++)
 	{
-		for(let i=0;i<e.touches.lenght;i++)
+		love.touches[i] = {};
+		love.touches[i].identifier = e.touches[i].indentifier;
+		love.touches[i].clientX = e.touches[i].clientX;
+		love.touches[i].clientY = e.touches[i].clientY;
+		love.touches[i].state = "start";
+		if(love.touchpressed != undefined)
 		{
-			let touch = e.touches[i];
-			love.touchpressed(touch.identifier,touch.clientX,touch.clientY,0,0,1);
+			love.touchpressed(
+			love.touches[i].identifier,
+			love.touches[i].clientX,
+			love.touches[i].clientY,0,0,1);
 		}
-	}	
+	}
+}
+function _event_ontouchmove(e) {
+	//console.log("touch move");
+	//e.preventDefault();
+	for(let i=0;i<e.changedTouches.length;i++)
+	{
+		for(let j=0;j<love.touches.length;j++)
+		{
+			if( love.touches[j].indentifier==e.changedTouches[i].indentifier)
+			{
+				love.touches[j].clientX = e.changedTouches[i].clientX;
+				love.touches[j].clientY = e.changedTouches[i].clientY;
+				love.touches[j].state = "move";
+				if(love.touchpressed != undefined)
+				{
+					love.touchpressed(
+					love.touches[j].identifier,
+					love.touches[j].clientX,
+					love.touches[j].clientY,0,0,1);
+				}
+			}
+		}
+	}
 }
 function _event_ontouchend(e) {
-	e.preventDefault();
+	//e.preventDefault();
 	//console.log("touch end");
-	if(love.touchreleased != undefined)
+	for(let i=0;i<e.changedTouches.length;i++)
 	{
-		for(let i=0;i<e.touches.lenght;i++)
+		for(let j=0;j<love.touches.length;j++)
 		{
-			let touch = e.touches[i];
-			love.touchreleased(touch.identifier,touch.clientX,touch.clientY,0,0,1);
-			for(let j=0;j<this.touches.lenght;j++)
+			if( love.touches[j].indentifier==e.changedTouches[i].indentifier)
 			{
-				if(touch.clientX == love.touches[j].clientX &&
-					touch.clientY == love.touches[j].clientY)
+				if(love.touchreleased != undefined)
 				{
-					love.touches.splice(j,1);
-					break;
+					love.touchreleased(
+					love.touches[j].identifier,
+					love.touches[j].clientX,
+					love.touches[j].clientY,0,0,1);
 				}
+				love.touches.splice(j,1);
 			}
 		}
 	}
@@ -724,7 +755,9 @@ if (LOVE2D_MOUSE == true) {
 }
 if (LOVE2D_TOUCH == true) {
 	document.addEventListener("touchstart", _event_ontouchstart, false);
+	document.addEventListener("touchmove", _event_ontouchmove, false);
 	document.addEventListener("touchend", _event_ontouchend, false);
+	document.addEventListener("touchcancel", _event_ontouchend, false);
 	_disableRightClickMenu();
 }
 window.requestAnimationFrame(_main_loop);

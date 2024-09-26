@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-const LOVE2D_VERSION = "b0.6.2-1"
+const LOVE2D_VERSION = "b0.6.2-2"
 const LOVE2D_MOUSE = true;
 const LOVE2D_KEYBOARD = true;
 const LOVE2D_TOUCH = true;
@@ -227,10 +227,31 @@ class Love
 		clas.pause();
 	}
 	graphics_getWidth() {
-		return this.canvas.width;
+		//let os = love.system_getOs();
+		//print(os)
+		//if(os!="iOS" && os!="Android")
+			return this.canvas.width;
+		//return window.screen.width;
 	}
 	graphics_getHeight() {
-		return this.canvas.height;
+		//let os = this.system_getOs();
+		//if(os!="iOS" && os!="Android")
+			return this.canvas.height;
+		//return window.screen.height;
+	}
+	
+	window_getWidth() {
+		//let os = love.system_getOs();
+		//print(os)
+		//if(os!="iOS" && os!="Android")
+		//	return this.canvas.width;
+		return window.screen.width;
+	}
+	window_getHeight() {
+		//let os = this.system_getOs();
+		//if(os!="iOS" && os!="Android")
+		//	return this.canvas.height;
+		return window.screen.height;
 	}
 	graphics_newText(pfont,ptext)
 	{
@@ -660,8 +681,8 @@ function _event_onmousedown(e)
 	}
 }
 function _event_onmousemove(e) {
-	love.mouse.y = e.y - love.canvas.offsetTop;
-	love.mouse.x = e.x - love.canvas.offsetLeft;
+	love.mouse.y = window.pageYOffset + e.y - love.canvas.offsetTop;
+	love.mouse.x = window.pageXOffset + e.x - love.canvas.offsetLeft;
 }
 function _event_onmouseup(e) {
 	if(e.buttons==0)
@@ -682,19 +703,19 @@ function _event_ontouchstart(e) {
 	//console.log("touch start");
 	//e.preventDefault();
 	
-	for(let i=0;i<e.touches.length;i++)
+	for(let j=0;j<e.changedTouches.length;j++)
 	{
-		love.touches[i] = {};
-		love.touches[i].identifier = e.touches[i].indentifier;
-		love.touches[i].clientX = e.touches[i].clientX;
-		love.touches[i].clientY = e.touches[i].clientY;
-		love.touches[i].state = "start";
+		love.touches[j] = {};
+		love.touches[j].identifier = e.changedTouches[j].indentifier;
+		love.touches[j].clientX = window.pageXOffset + e.changedTouches[j].clientX;
+		love.touches[j].clientY = window.pageYOffset + e.changedTouches[j].clientY;
+		love.touches[j].state = "start";
 		if(love.touchpressed != undefined)
 		{
 			love.touchpressed(
-			love.touches[i].identifier,
-			love.touches[i].clientX,
-			love.touches[i].clientY,0,0,1);
+			love.touches[j].identifier,
+			love.touches[j].clientX,
+			love.touches[j].clientY,0,0,1);
 		}
 	}
 }
@@ -707,8 +728,8 @@ function _event_ontouchmove(e) {
 		{
 			if( love.touches[j].indentifier==e.changedTouches[i].indentifier)
 			{
-				love.touches[j].clientX = e.changedTouches[i].clientX;
-				love.touches[j].clientY = e.changedTouches[i].clientY;
+				love.touches[j].clientX = window.pageXOffset + e.changedTouches[i].clientX;
+				love.touches[j].clientY = window.pageYOffset + e.changedTouches[i].clientY;
 				love.touches[j].state = "move";
 				if(love.touchpressed != undefined)
 				{

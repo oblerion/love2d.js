@@ -92,5 +92,5 @@ a simple index.html
 </body>
 </html>
 ```
-## it use love2d.js
+## It use love2d.js
 [magnus oblerion website](https://oblerion.github.io/website/)

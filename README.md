@@ -1,4 +1,4 @@
-# love2d.js
+# [love2d.js](https://github.com/oblerion/love2d.js)
 
 ## Table of content
 - [Description](#Description)

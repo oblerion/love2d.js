@@ -2,13 +2,10 @@
 <html id="html" lang="en">
 <title>love2d.js</title>
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script nomodule>
-		// if no support for module
-		document.write("your old browser don't support module type : need update it");
-	</script>
-	<script type="module">
-		import {love} from "./js/love2d.js";
+    	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<script src="./js/love2d.js">
+	<script> //type="module">
+		//import {love} from "./js/love2d.js";
 		//love.system_writeSave("savet",{name:"ok"});
 		console.log(love.system_readSave("savet").name)
 		love.load=function()

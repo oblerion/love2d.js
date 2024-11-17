@@ -97,10 +97,6 @@ class Love
         this.lastUpdate = 0;
         this.loading = 0;
     }
-    getTextWidth(text)
-    {
-    	return this.context.measureText(text);
-    }
 	system_writeSave(name,val)
 	{
 		if(typeof(name)=="string" &&
@@ -786,5 +782,5 @@ if (LOVE2D_TOUCH == true) {
 	_disableRightClickMenu();
 }
 window.requestAnimationFrame(_main_loop);
-//export {love,math_random};
+export {love,math_random};
 

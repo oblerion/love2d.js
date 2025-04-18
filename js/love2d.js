@@ -1,4 +1,4 @@
-/*Copyright (c) 2024 oblerion
+/*Copyright (c) 2025 oblerion
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-const LOVE2D_VERSION = "b0.6.2-2"
+const LOVE2D_VERSION = "b0.6.3"
 const LOVE2D_MOUSE = true;
 const LOVE2D_KEYBOARD = true;
 const LOVE2D_TOUCH = true;
+const LOVE2D_GAMEPAD = true;
 
 function _sizeOf(value)
 {
@@ -60,6 +61,50 @@ function collide(a, b) {
 		return true;
 	return false;
 }
+
+class Joystick
+{
+	constructor(joystick)
+	{
+		this.joystick = joystick;
+	}
+	getName()
+	{
+		return this.joystick.id;
+	}
+	getId()
+	{
+		return this.joystick.index;
+	}
+	getButtonCount()
+	{
+		return this.joystick.buttons.length;
+	}
+	getAxisCount()
+	{
+		return this.joystick.axes.length;
+	}
+	isDown(id)
+	{
+		if(id>-1 &&
+			id<this.getButtonCount())
+		{
+			return this.joystick.buttons[id].pressed;
+		}
+		return false;
+	}
+	getAxis(id)
+	{
+		if(id>-1 &&
+			id<this.getAxisCount()
+		)
+		{
+			return this.joystick.axes[id];
+		}
+		return 0;
+	}
+}
+
 class Love
 {
     constructor()
@@ -96,7 +141,27 @@ class Love
 
         this.lastUpdate = 0;
         this.loading = 0;
+
+		this.joysticks = [];
     }
+	_update_joystick()
+	{
+		this.joysticks = [];
+		let l = Navigator.getGamepads();
+		for(let i=0;i<l.length;i++)
+		{
+			let jt = new Joystick(l[i]);
+			this.joysticks.push(jt);
+		}
+	}
+	joystick_getJoysticks()
+	{
+		return this.joysticks;
+	}
+	joystick_getJoystickCount()
+	{
+		return this.joysticks.length
+	}
 	system_writeSave(name,val)
 	{
 		if(typeof(name)=="string" &&
@@ -763,6 +828,26 @@ function _event_ontouchend(e) {
 		}
 	}
 }
+function _event_gamepadConnect(e)
+{
+	console.log(
+		"Gamepad connected at index %d: %s. %d buttons, %d axes.",
+		e.gamepad.index,
+		e.gamepad.id,
+		e.gamepad.buttons.length,
+		e.gamepad.axes.length,
+	);
+	love._update_joystick();
+}
+function _event_gamepadDisconnect(e)
+{
+	console.log(
+		"Gamepad disconnected from index %d: %s",
+		e.gamepad.index,
+		e.gamepad.id,
+	);
+	love._update_joystick();
+}
 // load event
 if (LOVE2D_KEYBOARD == true) {
 	document.addEventListener('keydown', _event_onkeydown);
@@ -780,6 +865,10 @@ if (LOVE2D_TOUCH == true) {
 	document.addEventListener("touchend", _event_ontouchend, false);
 	document.addEventListener("touchcancel", _event_ontouchend, false);
 	_disableRightClickMenu();
+}
+if(LOVE2D_GAMEPAD == true){
+	window.addEventListener("gamepadconnected",_event_gamepadConnect);
+	window.addEventListener("gamepaddisconnected",_event_gamepadDisconnect);
 }
 window.requestAnimationFrame(_main_loop);
 export {love,math_random};

@@ -64,32 +64,32 @@ function collide(a, b) {
 
 class Joystick
 {
-	constructor(joystick)
+	constructor(index)
 	{
-		this.joystick = joystick;
+		this.index = index;
 	}
 	getName()
 	{
-		return this.joystick.id;
+		return navigator.getGamepads()[this.index].id;
 	}
 	getId()
 	{
-		return this.joystick.index;
+		return this.index;
 	}
 	getButtonCount()
 	{
-		return this.joystick.buttons.length;
+		return navigator.getGamepads()[this.index].buttons.length;
 	}
 	getAxisCount()
 	{
-		return this.joystick.axes.length;
+		return navigator.getGamepads()[this.index].axes.length;
 	}
 	isDown(id)
 	{
 		if(id>-1 &&
 			id<this.getButtonCount())
 		{
-			return this.joystick.buttons[id].pressed;
+			return navigator.getGamepads()[this.index].buttons[id].pressed;
 		}
 		return false;
 	}
@@ -98,8 +98,8 @@ class Joystick
 		if(id>-1 &&
 			id<this.getAxisCount()
 		)
-		{
-			return this.joystick.axes[id];
+		{	let axe = navigator.getGamepads()[this.index].axes[id];
+			return  Math.floor(axe*1000)/1000   
 		}
 		return 0;
 	}
@@ -144,16 +144,24 @@ class Love
 
 		this.joysticks = [];
     }
-	_update_joystick()
-	{
-		this.joysticks = [];
-		let l = Navigator.getGamepads();
-		for(let i=0;i<l.length;i++)
-		{
-			let jt = new Joystick(l[i]);
-			this.joysticks.push(jt);
-		}
-	}
+	// _update_joystick()
+	// {
+	// 	if(love.joysticks.length>0)
+	// 	{
+	// 		let ljt = navigator.getGamepads();
+	// 		if(ljt!=null && ljt.length>0)
+	// 		{
+	// 			for(let i=0;i<ljt.length;i++)
+	// 			{
+	// 				let id = love.joysticks[i].id;
+	// 				let index = love.joysticks[i].index;
+	// 				love.joysticks[i] = new Joystick(ljt[i]);
+	// 				love.joysticks[i].id = id;
+	// 				love.joysticks[i].index = index;
+	// 			}
+	// 		}
+	// 	}
+	// }
 	joystick_getJoysticks()
 	{
 		return this.joysticks;
@@ -830,23 +838,32 @@ function _event_ontouchend(e) {
 }
 function _event_gamepadConnect(e)
 {
-	console.log(
-		"Gamepad connected at index %d: %s. %d buttons, %d axes.",
-		e.gamepad.index,
-		e.gamepad.id,
-		e.gamepad.buttons.length,
-		e.gamepad.axes.length,
-	);
-	love._update_joystick();
+	// console.log(
+	// 	"Gamepad connected at index %d: %s. %d buttons, %d axes.",
+	// 	e.gamepad.index,
+	// 	e.gamepad.id,
+	// 	e.gamepad.buttons.length,
+	// 	e.gamepad.axes.length,
+	// );
+	let joystick = new Joystick(e.gamepad.index);
+	love.joysticks.push(joystick);
+	
 }
 function _event_gamepadDisconnect(e)
 {
-	console.log(
-		"Gamepad disconnected from index %d: %s",
-		e.gamepad.index,
-		e.gamepad.id,
-	);
-	love._update_joystick();
+	// console.log(
+	// 	"Gamepad disconnected from index %d: %s",
+	// 	e.gamepad.index,
+	// 	e.gamepad.id,
+	// );
+	for(let i=0;i<love.joysticks.length;i++)
+	{
+		if(e.gamepad.index==love.joysticks[i].getId())
+		{
+			love.joysticks.splice(i,1);
+			break;
+		}
+	}
 }
 // load event
 if (LOVE2D_KEYBOARD == true) {

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html id="html" lang="fr">
+<title> love2d.js </title>
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<script nomodule>
+		document.write("your old browser don't support module type : need update it");
+	</script>
+</head>
+
+<body>
+	<script type="module">
+		import {love} from "../../js/love2d.js";
+
+		love.load=function()
+		{
+			// set width ans height of game
+			love.window_setMode(800,500);
+
+		}
+		// update loop function
+		love.update=function(dt)
+		{
+	
+		}
+		// draw loop function
+		love.draw =function()
+		{
+			love.graphics_setColor(5,5,5,255)
+			let jlist = love.joystick_getJoysticks();
+			const jcount = love.joystick_getJoystickCount();
+			if(jcount==0) love.graphics_print("connect gamepad and\npress button first",20,30,0,20);
+			love.graphics_print("gamepad count :"+jcount,20,50,0,20);
+			for(let i=0;i<jcount;i++)
+			{
+				love.graphics_print("index : "+jlist[i].getId(),20,100,0,20);
+				love.graphics_print("name : "+jlist[i].getName(),20,120,0,20);
+				const nbtn = jlist[i].getButtonCount();
+				for(let ibtn=0;ibtn<nbtn;ibtn++)
+				{
+					if(jlist[i].isDown(ibtn))
+					{
+						love.graphics_print("button down in "+ibtn,20,140,0,20);
+					}
+				}
+				for(let iaxe=0;iaxe<l[i].getAxisCount();iaxe++)
+				{
+					let axe = jlist[i].getAxis(iaxe);
+					love.graphics_print("axe "+iaxe+" : "+axe,20,160+(iaxe*20),0,20);
+				}
+			}
+		}
+		
+	</script>
+
+</body>
+</html>
